@@ -2,8 +2,9 @@
  * ElemType.c
  *
  *  Created on: 18 giu 2023
- *      Author: vitomannone
+ *      Author -> vitomannone
  */
+//Inlcude di elemtype.h
 #include "ElemType.h"
 
 #if INT_TYPE
@@ -11,6 +12,7 @@
 int elemCompare(const ElemType_t *el1, const ElemType_t *el2) {
 	return (*el1 > *el2) - (*el1 < *el2);
 }
+
 
 //returns a copy of the input elements
 ElemType_t elemCopy(const ElemType_t *el) {
