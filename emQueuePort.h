@@ -8,14 +8,8 @@
 #ifndef EMQUEUEPORT_H_
 #define EMQUEUEPORT_H_
 
-/*
- * Enabling this the user can allow the code to manage the copy of the data
- * structure using ElemType.h, otherwise the pointer to the data structure will be
- * returned and the user must handle it inside a critical section
- */
-#define QUEUE_USE_DATATYPE_HANDLER 0
 #define QUEUE_USE_LOCK_MECHANISM 1
-#define QUEUE_USE_EMALLOC 1
+#define QUEUE_USE_EMALLOC 0
 
 /*
  * Necessary definition for lock/unlock functions
@@ -49,14 +43,13 @@ typedef void * Queue_sem_t;
 
 /*
  * Necessary definition to handle the specific data type of the structure
- */
-#if QUEUE_USE_DATATYPE_HANDLER
+ * The user can allow the code to manage the copy of the data
+ * structure using ElemType.h
+*/
+
 #include "ElemType.h"
 #define emQueuePort_ElemCpy(ptrSrc, ptrDest, size) 				elemCopy(ptrSrc, ptrDest)
-#else
-#include <string.h> //for memcpy
-#define emQueuePort_ElemCpy(ptrSrc, ptrDest, size) 				memcpy(ptrDest, ptrSrc, size)
-#endif /* USE_DATATYPE_HANDLER */
+
 /*
  * Necessary definitions for memory allocation
  */
