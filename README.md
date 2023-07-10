@@ -1,8 +1,9 @@
-# emQueue
-API functions for embedded devices that implement thread-safe FIFO queue of generic data type
+# emQueue with QoS policies
+API functions for embedded devices that implement thread-safe priority multiple queue with  
+the possibility to use the lifespan policy for an integer.
+The lifespan policy allow to implement aging priority of data from lower to highter priority queues.
 
 # dependencies
-- only for macOS
 - need gcc to compile
 
 # how to run
@@ -10,8 +11,9 @@ API functions for embedded devices that implement thread-safe FIFO queue of gene
     make all --> to compile the project \
     make run --> to execute the output file \
     make clean --> to delete all the binary output files \
-- it is possibile to set the number of writer and reader task in the PresentazioneEsame.h file \
+- it is possibile to set the number of writer and reader task and the number of priority queues in the PresentazioneEsame.h file \
     Note: number of writer must be greater or equal the number of reader
+
 
 
 
