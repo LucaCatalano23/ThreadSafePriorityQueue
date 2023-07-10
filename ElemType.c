@@ -13,9 +13,11 @@ int elemCompare(const ElemType_t *el1, const ElemType_t *el2) {
 }
 
 //returns a copy of the input elements
-ElemType_t elemCopy(const ElemType_t *el) {
-	return *el;
+void elemCopy(const ElemType_t *src, ElemType_t *dest) {
+	if(src == NULL || dest == NULL) return;
+	dest = &src;
 }
+
 
 //swaps the elements content
 void elemSwap(ElemType_t *el1, ElemType_t *el2) {
