@@ -12,10 +12,9 @@
 #include <stdint.h>
 
 struct UserDataStruct_t {
-	uint8_t age;
-	char name[16];
-	double height;
-	double weight;
+	int num;
+	double timer;
+	double time_in;
 };
 
 typedef struct UserDataStruct_t ElemType_t;
