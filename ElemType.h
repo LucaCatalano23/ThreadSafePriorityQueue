@@ -11,24 +11,13 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define INT_TYPE 0
-
-#if INT_TYPE
-
-typedef int ElemType_t;
-
-#else
-
 struct UserDataStruct_t {
-	uint8_t age;
-	char name[16];
-	double height;
-	double weight;
+	int num;
+	double timer;
+	double time_in;
 };
 
 typedef struct UserDataStruct_t ElemType_t;
-
-#endif /* INT_TYPE */
 
 //return a value > 0 if el1 is greater than el2, value = 0 if inputs are equal, value < 0 if el1 < el2
 int elemCompare(const ElemType_t *el1, const ElemType_t *el2);

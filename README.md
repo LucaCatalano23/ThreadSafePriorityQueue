@@ -3,7 +3,7 @@ API functions for embedded devices that implement thread-safe priority multiple 
 the possibility to use the lifespan policy for an integer.
 The lifespan policy allow to implement aging priority of data from lower to highter priority queues.
 
-# how to run
+# how to run the code
 - open a terminal and execute: \    
     ```make all``` --> to compile the project \
     ```make run``` --> to execute the output file \
