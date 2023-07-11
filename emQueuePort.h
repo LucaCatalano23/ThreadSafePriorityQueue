@@ -45,7 +45,7 @@ typedef void * Queue_sem_t;
  * Necessary definition to handle the specific data type of the structure
  * The user can allow the code to manage the copy of the data
  * structure using ElemType.h
-*/
+ */
 
 #include "ElemType.h"
 #define emQueuePort_ElemCpy(ptrSrc, ptrDest, size) 				elemCopy(ptrSrc, ptrDest)
