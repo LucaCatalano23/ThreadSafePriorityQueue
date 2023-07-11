@@ -45,39 +45,37 @@ emQueueReturn_t emQueue_IsEmpty(emQueueHandle_t queue) {
 
 emQueueReturn_t emQueue_Put(emQueueHandle_t queue, const void *ptrElem) {
 	if(queue == NULL) return emError;
-	emQueueReturn_t retVal = emError;
-	if(emQueue_IsFull(queue) == em_True) {
-		retVal = em_QueueFull;
-	} else {
-		retVal = emQueuePort_EnterCritical(queue->semHandle);
-		if(retVal != 1) {
-			return em_SemError;
+	emQueueReturn_t retVal = emQueuePort_EnterCritical(queue->semHandle);
+	if(retVal == 1) {
+		if(emQueuePort_StructIsFull(queue->dataStruct)) {
+			retVal = em_QueueFull;
 		} else {
 			void * dest = emQueuePort_StructGetHead(queue->dataStruct);
 			emQueuePort_ElemCpy(ptrElem, dest, queue->elemSize);
 			retVal = em_True;
 		}
-		emQueuePort_ExitCritical(queue->semHandle);
+	} else {
+		return em_SemError;
 	}
+	emQueuePort_ExitCritical(queue->semHandle);
 	return (emQueueReturn_t)retVal;
 }
 
 emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest) {
 	if(queue == NULL) return emError;
-	emQueueReturn_t retVal = emError;
-	if(emQueue_IsEmpty(queue) == em_True) {
-		retVal = em_QueueEmpty;
+	emQueueReturn_t retVal = emQueuePort_EnterCritical(queue->semHandle);
+	if(retVal != 1) {
+		return em_SemError;
 	} else {
-		retVal = emQueuePort_EnterCritical(queue->semHandle);
-		if(retVal != 1) {
-			return em_SemError;
+		if(emQueuePort_StructIsEmpty(queue->dataStruct)) {
+			retVal = em_QueueEmpty;
 		} else {
 			void * src = emQueuePort_StructGetTail(queue->dataStruct);
 			emQueuePort_ElemCpy(src, ptrDest, queue->elemSize);
 			retVal = em_True;
 		}
-		emQueuePort_ExitCritical(queue->semHandle);
 	}
+	emQueuePort_ExitCritical(queue->semHandle);
 	return (emQueueReturn_t)retVal;
 }
 
