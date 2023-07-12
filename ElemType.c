@@ -2,15 +2,9 @@
  * ElemType.c
  *
  *  Created on: 18 giu 2023
- *      Author -> vitomannone
+ *      Author: vitomannone
  */
-//Inlcude di elemtype.h
 #include "ElemType.h"
-
-//return a value > 0 if el1 is greater than el2, value = 0 if inputs are equal, value < 0 if el1 < el2
-/*int elemCompare(const ElemType_t *el1, const ElemType_t *el2) {
-	return (*el1 > *el2) - (*el1 < *el2);
-}*/
 
 //return a value > 0 if el1 age is greater than el2 age, value = 0 if equal, value < 0 otherwise
 int elemCompare(const ElemType_t *el1, const ElemType_t *el2) {
@@ -39,6 +33,5 @@ void elemDel(ElemType_t *el) {
 
 //print element on file
 void elemWrite(const ElemType_t *el, FILE *f) {
-	fprintf(f, "The data %d has been inserted %f, its timer is %f\n", el->num, el->time_in, el->timer);
+	fprintf(f, "The num %d has been inserted in %f for %f", el->num, el->time_in, el->timer);
 }
-
