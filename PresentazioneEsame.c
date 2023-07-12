@@ -10,16 +10,16 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 #include "PresentazioneEsame.h"
 #include "emQueue.h"
 
 typedef struct {
+    double a;
+    double b;
     int num;
-    double timer;
-    double time_in;
 } Temp_t;
 
 void shuffle(void *array[], size_t n) {
@@ -58,10 +58,9 @@ void *writer(void *arg) {
 
     for(int i = 0; i < N_SCRITTURE; i++) {
         Temp_t elem;
-        elem.num = randomInt(0, 100) ;
-        elem.time_in = 0.0;
-        elem.timer = 0.0 ;
-        //snprintf(elem.name, 16, "Punto[%d]", nb_writer + i);
+        elem.a = 0.0;
+        elem.b = elem.a * 2.0;
+        elem.num = randomInt(0, 100);
         printf("Writer[%d] writing on buffer...\r\n", nb_writer);
         emQueueReturn_t retval = emQueue_Put(queue, &elem);
         switch (retval) {
@@ -70,13 +69,13 @@ void *writer(void *arg) {
             i--;
             break;
         case em_True:
-            printf("Writer[%d] inserted the element: %d; %f; %f\r\n", nb_writer, elem.num, elem.timer, elem.time_in);
+            printf("Writer[%d] inserted the element: %d; %f; %f\r\n", nb_writer, elem.num, elem.b, elem.a);
             break;
         default:
             printf("Writer[%d]: error on emQueue_Put()\r\n", nb_writer);
             break;
         }
-        pausetta(100, 500);
+        pausetta(MIN_MS_PAUSA, MAX_MS_PAUSA);
     }
 
     return NULL;
@@ -95,13 +94,13 @@ void *reader(void *arg) {
                 printf("Reader[%d] could not read the buffer: buffer is empty.\r\n", nb_reader);
                 break;
             case em_True:
-                printf("Reader[%d] read: %d; %f; %f\r\n", nb_reader, elem.num, elem.timer, elem.time_in);
+                printf("Reader[%d] read: %d; %f; %f\r\n", nb_reader, elem.num, elem.b, elem.a);
                 break;
             default:
                 printf("Reader[%d]: error on emQueue_Get()\r\n", nb_reader);
                 break;
         }
-        pausetta(500, 1000);
+        pausetta(MIN_MS_PAUSA, MAX_MS_PAUSA);
     }
 
     return NULL;
@@ -109,7 +108,7 @@ void *reader(void *arg) {
 
 void enQueue_example_01(void) {
     srand((unsigned int)time(NULL));
-    pthread_t thread[N_SCRITTORI + N_LETTORI];
+    pthread_t thread[N_SCRITTORI + N_LETTORI] = {0} ;
     pthread_attr_t attr = {0};
     pthread_attr_init(&attr);
     size_t nb_elements = L_BUFFER;

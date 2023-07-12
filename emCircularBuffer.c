@@ -41,7 +41,7 @@ CBuffer_t *emCircularInit(const size_t maxElems, const size_t elemSize, const ch
 #endif
 #if CB_DEBUG
 	if(retval != NULL) {
-		CB_DEBUG_Print("CB:\tCircularBuffer initialised. CB pointer is %p.\r\n", retval);
+		CB_DEBUG_Print("CB:\tCircularBuffer initialised. CB pointer is %p.\r\n", (void*)retval);
 	}
 #endif
 	return retval;
@@ -122,12 +122,12 @@ void *emCircularGetHead(CBuffer_t *buffer) {
 		CB_DEBUG_Print("CB:\tBuffer is full.\r\n");
 		return NULL;
 	case CB_error:
-		CB_DEBUG_Print("CB:\Error checking whether CB is full.\r\n");
+		CB_DEBUG_Print("CB:\tError checking whether CB is full.\r\n");
 		return NULL;
 	case CB_false:
 		break;
 	default:
-		CB_DEBUG_Print("CB:\Error emCircularIsFull returned a a strange value.\r\n");
+		CB_DEBUG_Print("CB:\tError emCircularIsFull returned a a strange value.\r\n");
 		return NULL;
 	}
 	int sem_retval = emCircularPort_EnterCritical(buffer->sem);
@@ -156,12 +156,12 @@ void *emCircularGetTail(CBuffer_t *buffer) {
 		CB_DEBUG_Print("CB:\tBuffer is empty.\r\n");
 		return NULL;
 	case CB_error:
-		CB_DEBUG_Print("CB:\Error checking whether CB is empty.\r\n");
+		CB_DEBUG_Print("CB:\tError checking whether CB is empty.\r\n");
 		return NULL;
 	case CB_false:
 		break;
 	default:
-		CB_DEBUG_Print("CB:\Error emCircularIsFull returned a a strange value.\r\n");
+		CB_DEBUG_Print("CB:\tError emCircularIsFull returned a a strange value.\r\n");
 		return NULL;
 	}
 	int sem_retval = emCircularPort_EnterCritical(buffer->sem);

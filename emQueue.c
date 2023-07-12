@@ -64,9 +64,7 @@ emQueueReturn_t emQueue_Put(emQueueHandle_t queue, const void *ptrElem) {
 emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest) {
 	if(queue == NULL) return emError;
 	emQueueReturn_t retVal = emQueuePort_EnterCritical(queue->semHandle);
-	if(retVal != 1) {
-		return em_SemError;
-	} else {
+	if(retVal == 1) {
 		if(emQueuePort_StructIsEmpty(queue->dataStruct)) {
 			retVal = em_QueueEmpty;
 		} else {
@@ -74,6 +72,8 @@ emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest) {
 			emQueuePort_ElemCpy(src, ptrDest, queue->elemSize);
 			retVal = em_True;
 		}
+	} else {
+		return em_SemError;
 	}
 	emQueuePort_ExitCritical(queue->semHandle);
 	return (emQueueReturn_t)retVal;

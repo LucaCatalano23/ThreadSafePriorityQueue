@@ -8,6 +8,11 @@
 #ifndef EMQUEUEPORT_H_
 #define EMQUEUEPORT_H_
 
+/*
+ * Enabling this the user can allow the code to manage the copy of the data
+ * structure using ElemType.h, otherwise the pointer to the data structure will be
+ * returned and the user must handle it inside a critical section
+ */
 #define QUEUE_USE_LOCK_MECHANISM 1
 #define QUEUE_USE_EMALLOC 0
 

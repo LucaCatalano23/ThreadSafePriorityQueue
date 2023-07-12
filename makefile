@@ -22,7 +22,7 @@ MAIN = esame.out
 
 all:    $(MAIN)
 
-$(MAIN): $(OUTDIR) | $(OBJS)
+$(MAIN): $(OUTDIR) $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OUTOBJS) $(LFLAGS) $(LIBS)
 
 $(OUTDIR):
@@ -33,7 +33,7 @@ $(OUTDIR):
 
 clean:
 	rm -f $(MAIN)
-	rm -r $(OUTDIR)
+	rm -rf $(OUTDIR)
 
 depend: $(SRCS)
 	makedepend $(INCLUDES) $^
