@@ -28,6 +28,9 @@ typedef enum {
 	em_QueueEmpty,
 } emQueueReturn_t;
 
+/*Struttura dati contenente un array di puntatori (void**dataStruct)
+Con il parametro n_priority è garantito l'utilizzo delle code con priorità*/
+
 typedef struct {
 	void **dataStruct;
 	Queue_sem_t semHandle;
