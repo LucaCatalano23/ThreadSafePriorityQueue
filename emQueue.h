@@ -29,22 +29,22 @@ typedef enum {
 } emQueueReturn_t;
 
 typedef struct {
-	void *dataStruct;
+	void **dataStruct;
 	Queue_sem_t semHandle;
 	size_t elemSize;
 } Handler_t ;
 
 typedef Handler_t * emQueueHandle_t;
 
-emQueueHandle_t emQueue_New(const size_t queueSize, const size_t elemSize, const char *name);
+emQueueHandle_t emQueue_New(const size_t queueSize, const size_t elemSize, const char *name, const size_t n_priority);
 
-emQueueReturn_t emQueue_IsFull(emQueueHandle_t queue);
+emQueueReturn_t emQueue_IsFull(emQueueHandle_t queue, size_t priority);
 
-emQueueReturn_t emQueue_IsEmpty(emQueueHandle_t queue);
+emQueueReturn_t emQueue_IsEmpty(emQueueHandle_t queue, size_t priority);
 
-emQueueReturn_t emQueue_Put(emQueueHandle_t queue, const void *ptrElem);
+emQueueReturn_t emQueue_Put(emQueueHandle_t queue, const void *ptrElem, size_t priority);
 
-emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest);
+emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest, size_t n_priority);
 
 emQueueReturn_t emQueue_Delete(emQueueHandle_t queue);
 

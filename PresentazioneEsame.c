@@ -62,7 +62,7 @@ void *writer(void *arg) {
         elem.b = elem.a * 2.0;
         elem.num = randomInt(0, 100);
         printf("Writer[%d] writing on buffer...\r\n", nb_writer);
-        emQueueReturn_t retval = emQueue_Put(queue, &elem);
+        emQueueReturn_t retval = emQueue_Put(queue, &elem, 0);
         switch (retval) {
         case em_QueueFull:
             printf("Writer[%d] could not put element in the buffer: buffer is full\r\n", nb_writer);
@@ -84,11 +84,11 @@ void *writer(void *arg) {
 void *reader(void *arg) {
     int nb_reader = *(int*)arg;
     int nb_cycles = N_SCRITTURE;
-    while( (emQueue_IsEmpty(queue) != em_True) || (nb_cycles > 0) ) {
+    while( (emQueue_IsEmpty(queue, 0) != em_True) || (nb_cycles > 0) ) {
         nb_cycles--;
         printf("Reader[%d] is reading the buffer...\r\n", nb_reader);
         Temp_t elem;
-        emQueueReturn_t retval = emQueue_Get(queue, &elem);
+        emQueueReturn_t retval = emQueue_Get(queue, &elem, N_QUEUE_PRIORITY);
         switch(retval) {
             case em_QueueEmpty:
                 printf("Reader[%d] could not read the buffer: buffer is empty.\r\n", nb_reader);
@@ -117,7 +117,7 @@ void enQueue_example_01(void) {
     char sem_name[16];
     snprintf(sem_name, 16, "sem01");
 
-    queue = emQueue_New(nb_elements, sizeof(Temp_t), sem_name);
+    queue = emQueue_New(nb_elements, sizeof(Temp_t), sem_name, N_QUEUE_PRIORITY);
 
     int temp[N_LETTORI];
     for(int i = 0; i < N_SCRITTORI; i++) {

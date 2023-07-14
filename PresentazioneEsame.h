@@ -22,6 +22,7 @@ void *my_sem_init(const size_t count, const char *name);
 #define L_BUFFER 10
 #define MIN_MS_PAUSA 100
 #define MAX_MS_PAUSA 500
+#define N_QUEUE_PRIORITY 6
 
 #define ESAME_SCRITTORE()       enQueue_example_01()
 #define ESAME_LETTORE()         deQueue_example_02()
