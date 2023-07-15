@@ -70,7 +70,7 @@ void *writer(void *arg) {
             i--;
             break;
         case em_True:
-            printf("Writer[%d] inserted the element: %d; %f; %f\r\n", nb_writer, elem.num, elem.b, elem.a);
+            printf("Writer[%d] inserted the element %d in queue %d\r\n", nb_writer, elem.num, priority);
             break;
         default:
             printf("Writer[%d]: error on emQueue_Put()\r\n", nb_writer);
@@ -86,8 +86,8 @@ void *reader(void *arg) {
     int nb_reader = *(int*)arg;
     int nb_cycles = N_SCRITTURE;
     while( nb_cycles > 0) {
-        nb_cycles--;
         for(int i = 0; i < N_QUEUE_PRIORITY; i++){
+            //Controllo se la coda non è vuota e se non lo è leggo il buffer
             if(emQueue_IsEmpty(queue, i) != em_True) {
                 printf("Reader[%d] is reading the buffer...\r\n", nb_reader);
                 Temp_t elem;
@@ -97,12 +97,14 @@ void *reader(void *arg) {
                     printf("Reader[%d] could not read the buffer: buffer is empty.\r\n", nb_reader);
                     break;
                     case em_True:
-                    printf("Reader[%d] read: %d; %f; %f\r\n", nb_reader, elem.num, elem.b, elem.a);
+                    printf("Reader[%d] read %d from queue %d\r\n", nb_reader, elem.num, i);
+                    nb_cycles--;
                     break;
                     default:
                     printf("Reader[%d]: error on emQueue_Get()\r\n", nb_reader);
                     break;
                 }
+                break;
             }
         }
         pausetta(MIN_MS_PAUSA, MAX_MS_PAUSA);
@@ -123,14 +125,15 @@ void enQueue_example_01(void) {
 
     queue = emQueue_New(nb_elements, sizeof(Temp_t), sem_name, N_QUEUE_PRIORITY);
 
-    int temp[N_LETTORI];
+    int temp[N_SCRITTORI];
+    int temp2[N_LETTORI];
     for(int i = 0; i < N_SCRITTORI; i++) {
-        temp[i] = 1000 * (i + 1);
+        temp[i] = i+1;
         pthread_create(&thread[i], &attr, writer, (void*)&temp[i]);
     }
     for(int i = 0; i < N_LETTORI; i++) {
-        temp[i] += (1000 * N_SCRITTORI);
-        pthread_create(&thread[i], &attr, reader, (void*)&temp[i]);
+        temp2[i] = i+1;
+        pthread_create(&thread[i+N_SCRITTORI], &attr, reader, (void*)&temp2[i]);
     }
 
     for(int i = 0; i < N_SCRITTORI + N_LETTORI; i++) {
