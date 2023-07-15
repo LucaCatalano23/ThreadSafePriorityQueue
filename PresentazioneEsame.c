@@ -45,7 +45,8 @@ static unsigned int randomInt(const unsigned int lower, const unsigned int upper
     return ((unsigned int)rand() % (upper - lower + 1)) + lower;
 }
 
-static void pausetta(const unsigned int lower, const unsigned int upper) {
+//Funzione timing_wait con cui ogni thread aspetta un pò -> EVitare starvation !
+static void timing_wait(const unsigned int lower, const unsigned int upper) {
     unsigned int time2Wait = randomInt(lower, upper);
     usleep(time2Wait * 1000);
 }
@@ -66,7 +67,7 @@ void *writer(void *arg) {
         emQueueReturn_t retval = emQueue_Put(queue, &elem, priority);
         switch (retval) {
         case em_QueueFull:
-            printf("Writer[%d] could not put element in the buffer: buffer is full\r\n", nb_writer);
+            printf("Writer[%d] could not put element in the buffer: buffer is full !\r\n", nb_writer);
             i--;
             break;
         case em_True:
@@ -76,7 +77,7 @@ void *writer(void *arg) {
             printf("Writer[%d]: error on emQueue_Put()\r\n", nb_writer);
             break;
         }
-        pausetta(MIN_MS_PAUSA, MAX_MS_PAUSA);
+        timing_wait(MIN_MS_PAUSA, MAX_MS_PAUSA);
     }
 
     return NULL;
@@ -94,7 +95,7 @@ void *reader(void *arg) {
                 emQueueReturn_t retval = emQueue_Get(queue, &elem, N_QUEUE_PRIORITY);
                 switch(retval) {
                     case em_QueueEmpty:
-                    printf("Reader[%d] could not read the buffer: buffer is empty.\r\n", nb_reader);
+                    printf("Reader[%d] could not read the buffer: buffer is empty !\r\n", nb_reader);
                     break;
                     case em_True:
                     printf("Reader[%d] read %d from queue %d\r\n", nb_reader, elem.num, i);
@@ -107,7 +108,7 @@ void *reader(void *arg) {
                 break;
             }
         }
-        pausetta(MIN_MS_PAUSA, MAX_MS_PAUSA);
+        timing_wait(MIN_MS_PAUSA, MAX_MS_PAUSA);
     }
     return NULL;
 }
@@ -125,15 +126,15 @@ void enQueue_example_01(void) {
 
     queue = emQueue_New(nb_elements, sizeof(Temp_t), sem_name, N_QUEUE_PRIORITY);
 
-    int temp[N_SCRITTORI];
-    int temp2[N_LETTORI];
+    int temp_scrittori[N_SCRITTORI];
+    int temp_lettori[N_LETTORI];
     for(int i = 0; i < N_SCRITTORI; i++) {
-        temp[i] = i+1;
-        pthread_create(&thread[i], &attr, writer, (void*)&temp[i]);
+        temp_scrittori[i] = i+1;
+        pthread_create(&thread[i], &attr, writer, (void*)&temp_scrittori[i]);
     }
     for(int i = 0; i < N_LETTORI; i++) {
-        temp2[i] = i+1;
-        pthread_create(&thread[i+N_SCRITTORI], &attr, reader, (void*)&temp2[i]);
+        temp_lettori[i] = i+1;
+        pthread_create(&thread[i+N_SCRITTORI], &attr, reader, (void*)&temp_lettori[i]);
     }
 
     for(int i = 0; i < N_SCRITTORI + N_LETTORI; i++) {
