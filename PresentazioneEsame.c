@@ -61,8 +61,9 @@ void *writer(void *arg) {
         elem.a = 0.0;
         elem.b = elem.a * 2.0;
         elem.num = randomInt(0, 100);
+        int priority = randomInt(0, N_QUEUE_PRIORITY - 1);
         printf("Writer[%d] writing on buffer...\r\n", nb_writer);
-        emQueueReturn_t retval = emQueue_Put(queue, &elem, 0);
+        emQueueReturn_t retval = emQueue_Put(queue, &elem, priority);
         switch (retval) {
         case em_QueueFull:
             printf("Writer[%d] could not put element in the buffer: buffer is full\r\n", nb_writer);
@@ -80,29 +81,32 @@ void *writer(void *arg) {
 
     return NULL;
 }
-
+ 
 void *reader(void *arg) {
     int nb_reader = *(int*)arg;
     int nb_cycles = N_SCRITTURE;
-    while( (emQueue_IsEmpty(queue, 0) != em_True) || (nb_cycles > 0) ) {
+    while( nb_cycles > 0) {
         nb_cycles--;
-        printf("Reader[%d] is reading the buffer...\r\n", nb_reader);
-        Temp_t elem;
-        emQueueReturn_t retval = emQueue_Get(queue, &elem, N_QUEUE_PRIORITY);
-        switch(retval) {
-            case em_QueueEmpty:
-                printf("Reader[%d] could not read the buffer: buffer is empty.\r\n", nb_reader);
-                break;
-            case em_True:
-                printf("Reader[%d] read: %d; %f; %f\r\n", nb_reader, elem.num, elem.b, elem.a);
-                break;
-            default:
-                printf("Reader[%d]: error on emQueue_Get()\r\n", nb_reader);
-                break;
+        for(int i = 0; i < N_QUEUE_PRIORITY; i++){
+            if(emQueue_IsEmpty(queue, i) != em_True) {
+                printf("Reader[%d] is reading the buffer...\r\n", nb_reader);
+                Temp_t elem;
+                emQueueReturn_t retval = emQueue_Get(queue, &elem, N_QUEUE_PRIORITY);
+                switch(retval) {
+                    case em_QueueEmpty:
+                    printf("Reader[%d] could not read the buffer: buffer is empty.\r\n", nb_reader);
+                    break;
+                    case em_True:
+                    printf("Reader[%d] read: %d; %f; %f\r\n", nb_reader, elem.num, elem.b, elem.a);
+                    break;
+                    default:
+                    printf("Reader[%d]: error on emQueue_Get()\r\n", nb_reader);
+                    break;
+                }
+            }
         }
         pausetta(MIN_MS_PAUSA, MAX_MS_PAUSA);
     }
-
     return NULL;
 }
 
