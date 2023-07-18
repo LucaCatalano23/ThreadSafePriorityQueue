@@ -16,13 +16,14 @@ void shuffle(void *array[], size_t n);
 //a sem_init, serve per compatibilità con macOs
 void *my_sem_init(const size_t count, const char *name);
 
-#define N_SCRITTORI 7
+#define N_SCRITTORI 3
 #define N_LETTORI 3
 #define N_SCRITTURE 3
 #define L_BUFFER 10
 #define MIN_MS_PAUSA 100
 #define MAX_MS_PAUSA 500
-#define N_QUEUE_PRIORITY 6
+#define N_QUEUE_PRIORITY 4
+#define MAX_LIFESPAN 2 
 
 #define ESAME_SCRITTORE()       enQueue_example_01()
 #define ESAME_LETTORE()         deQueue_example_02()

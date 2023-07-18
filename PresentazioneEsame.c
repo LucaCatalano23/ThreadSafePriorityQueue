@@ -17,9 +17,9 @@
 #include "emQueue.h"
 
 typedef struct {
-    double a;
-    double b;
     int num;
+    double lifespan;
+    double time_in;
 } Temp_t;
 
 void shuffle(void *array[], size_t n) {
@@ -45,6 +45,10 @@ static unsigned int randomInt(const unsigned int lower, const unsigned int upper
     return ((unsigned int)rand() % (upper - lower + 1)) + lower;
 }
 
+static double randomLifespan(const double upper) {
+    return (double)(rand() / (RAND_MAX / upper)) ;
+}
+
 //Funzione timing_wait con cui ogni thread aspetta un pò -> EVitare starvation !
 static void timing_wait(const unsigned int lower, const unsigned int upper) {
     unsigned int time2Wait = randomInt(lower, upper);
@@ -59,19 +63,18 @@ void *writer(void *arg) {
 
     for(int i = 0; i < N_SCRITTURE; i++) {
         Temp_t elem;
-        elem.a = 0.0;
-        elem.b = elem.a * 2.0;
+        elem.time_in = 0.0;
+        elem.lifespan = randomLifespan(MAX_LIFESPAN);
         elem.num = randomInt(0, 100);
-        int priority = randomInt(0, N_QUEUE_PRIORITY - 1);
         printf("Writer[%d] writing on buffer...\r\n", nb_writer);
-        emQueueReturn_t retval = emQueue_Put(queue, &elem, priority);
+        emQueueReturn_t retval = emQueue_Put(queue, &elem);
         switch (retval) {
         case em_QueueFull:
             printf("Writer[%d] could not put element in the buffer: buffer is full !\r\n", nb_writer);
             i--;
             break;
         case em_True:
-            printf("Writer[%d] inserted the element %d in queue %d\r\n", nb_writer, elem.num, priority);
+            printf("Writer[%d] inserted the element %d with the lifespan %.2f\r\n", nb_writer, elem.num, elem.lifespan);
             break;
         default:
             printf("Writer[%d]: error on emQueue_Put()\r\n", nb_writer);
@@ -98,7 +101,7 @@ void *reader(void *arg) {
                     printf("Reader[%d] could not read the buffer: buffer is empty !\r\n", nb_reader);
                     break;
                     case em_True:
-                    printf("Reader[%d] read %d from queue %d\r\n", nb_reader, elem.num, i);
+                    printf("Reader[%d] read %d from queue %d...%f\r\n", nb_reader, elem.num, i, elem.time_in);
                     nb_cycles--;
                     break;
                     default:
