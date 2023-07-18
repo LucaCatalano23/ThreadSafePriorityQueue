@@ -8,6 +8,7 @@
 #ifndef EMQUEUEPORT_H_
 #define EMQUEUEPORT_H_
 
+#include "PresentazioneEsame.h"
 /*
  * Enabling this the user can allow the code to manage the copy of the data
  * structure using ElemType.h, otherwise the pointer to the data structure will be
@@ -22,7 +23,6 @@
 #if QUEUE_USE_LOCK_MECHANISM
 #include <pthread.h>
 #include <semaphore.h>
-#include "PresentazioneEsame.h"
 #define emQueuePort_EnterCritical(ptrSem)			( !sem_wait(ptrSem) )
 #define emQueuePort_ExitCritical(ptrSem)			( !sem_post(ptrSem) )
 #define emQueuePort_InitBynSem(strName)				( my_sem_init(1, strName) )

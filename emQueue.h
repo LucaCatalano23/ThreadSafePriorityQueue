@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <time.h>
 
 /*
  * Include porting header file
@@ -37,6 +38,13 @@ typedef struct {
 	size_t elemSize;
 } Handler_t ;
 
+struct dataLifespan {
+	int num;
+	double lifespan;
+	double time_in;
+};
+
+typedef struct dataLifespan data;
 typedef Handler_t * emQueueHandle_t;
 
 emQueueHandle_t emQueue_New(const size_t queueSize, const size_t elemSize, const char *name, const size_t n_priority);
@@ -45,7 +53,7 @@ emQueueReturn_t emQueue_IsFull(emQueueHandle_t queue, size_t priority);
 
 emQueueReturn_t emQueue_IsEmpty(emQueueHandle_t queue, size_t priority);
 
-emQueueReturn_t emQueue_Put(emQueueHandle_t queue, const void *ptrElem, size_t priority);
+emQueueReturn_t emQueue_Put(emQueueHandle_t queue, void *ptrElem);
 
 emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest, size_t n_priority);
 

@@ -6,6 +6,8 @@
  */
 #include "emQueue.h"
 
+double step = (double) MAX_LIFESPAN / N_QUEUE_PRIORITY;
+
 emQueueHandle_t emQueue_New(const size_t queueSize, const size_t elemSize, const char *name, const size_t n_priority) {
 	if( (queueSize < 2) || (elemSize < 1) ) return NULL;
 	emQueueHandle_t retval = emQueuePort_Malloc(sizeof(Handler_t));
@@ -46,15 +48,17 @@ emQueueReturn_t emQueue_IsEmpty(emQueueHandle_t queue, size_t priority) {
 	return retval;
 }
 
-emQueueReturn_t emQueue_Put(emQueueHandle_t queue, const void *ptrElem, size_t priority) {
+emQueueReturn_t emQueue_Put(emQueueHandle_t queue, void *ptr) {
+	data* ptrElem = (data*) ptr;
 	if(queue == NULL) return emError;
+	size_t priority = (size_t) (ptrElem->lifespan / step) ;
 	emQueueReturn_t retVal = emQueuePort_EnterCritical(queue->semHandle);
 	if(retVal == 1) {
 		if(emQueuePort_StructIsFull(queue->dataStruct[priority])) {
 			retVal = em_QueueFull;
 		} else {
-			void * dest = emQueuePort_StructGetHead(queue->dataStruct[priority]);
-			emQueuePort_ElemCpy(ptrElem, dest, queue->elemSize);
+			void * dest = emQueuePort_StructGetHead(queue->dataStruct[priority]) ; 
+			emQueuePort_ElemCpy(ptrElem, dest, queue->elemSize) ;
 			retVal = em_True;
 		}
 	} else {
