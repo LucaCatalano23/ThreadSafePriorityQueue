@@ -10,11 +10,12 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <time.h>
 
 struct UserDataStruct_t {
 	int num;
 	double timer;
-	double time_in;
+	clock_t time_in;
 };
 
 typedef struct UserDataStruct_t ElemType_t;

@@ -16,7 +16,8 @@ void elemCopy(const ElemType_t *src, ElemType_t *dest) {
 	if(src == NULL || dest == NULL) return;
 	dest->num = src->num;
 	dest->timer = src->timer;
-	dest->time_in = src->time_in;
+	clock_t timeIn = clock() ;
+	dest->time_in = timeIn ;
 }
 
 //swaps the elements content
