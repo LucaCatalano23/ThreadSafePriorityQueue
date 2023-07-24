@@ -8,7 +8,7 @@ LFLAGS = -lpthread
 
 LIBS = 
 
-SRCS = ElemType.c emAlloc.c emCircularBuffer.c emQueue.c main.c PresentazioneEsame.c
+SRCS = ElemType.c emAlloc.c emCircularBuffer.c emQueue.c emManager.c main.c PresentazioneEsame.c
 
 OUTDIR = ./build
 
