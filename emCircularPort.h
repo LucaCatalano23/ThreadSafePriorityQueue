@@ -11,6 +11,7 @@
 #define CIRCULAR_USE_LOCK_MECHANISM 1
 #define CIRCULAR_USE_EMALLOC 0
 
+#include "ElemType.h"
 /*
  * Definition of necessary functions for memory management:
  * User can define its own emQueuePortMalloc() implementation

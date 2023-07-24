@@ -182,3 +182,14 @@ void *emCircularGetTail(CBuffer_t *buffer) {
 	emCircularPort_ExitCritical(buffer->sem);
 	return retval;
 }
+
+void stampaCoda(CBuffer_t *buffer) {
+
+	printf("elementi %ld, indice coda %d, indice testa %d\n", buffer->NbElems, buffer->tailInd, buffer->headInd) ;
+	for(int i = 0; i < buffer->maxElems; ++i) {
+		uint8_t *dato = (uint8_t*)buffer->startBuffer + (i * buffer->elemSize);
+		ElemType_t *value = (ElemType_t*) dato ;
+		printf("%d/%f || ", value->num, (double)value->timer);
+	}
+	printf("\n");
+}

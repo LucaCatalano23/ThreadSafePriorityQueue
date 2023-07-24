@@ -46,4 +46,6 @@ void *emCircularGetHead(CBuffer_t *buffer);
 
 void *emCircularGetTail(CBuffer_t *buffer);
 
+void stampaCoda(CBuffer_t *buffer);
+
 #endif /* EMCIRCULARBUFFER_H_ */
