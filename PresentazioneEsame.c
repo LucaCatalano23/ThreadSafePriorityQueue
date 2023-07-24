@@ -63,11 +63,26 @@ void *writer(void *arg) {
 
     for(int i = 0; i < N_SCRITTURE; i++) {
         Temp_t elem;
-        elem.time_in = 0.0;
-        elem.lifespan = randomLifespan(MAX_LIFESPAN);
-        elem.num = randomInt(0, 100);
+        int randomValue = randomInt(0,100) ;
+        int policy ;
+        if(randomValue > 10) {
+            policy = 1 ;
+        }
+        else {
+            policy = 0 ;
+        }
+        if(policy == 1) {
+            elem.time_in = 0.0;
+            elem.lifespan = randomLifespan(MAX_LIFESPAN);
+            elem.num = randomInt(0, 100);
+        }
+        else {
+            elem.time_in = 0;
+            elem.lifespan = 0.0;
+            elem.num = randomInt(0, 100);
+        }
         printf("Writer[%d] writing on buffer...\r\n", nb_writer);
-        emQueueReturn_t retval = emQueue_Put(queue, &elem);
+        emQueueReturn_t retval = emQueue_Put(queue, &elem, policy);
         switch (retval) {
         case em_QueueFull:
             printf("Writer[%d] could not put element in the buffer: buffer is full !\r\n", nb_writer);
@@ -91,27 +106,39 @@ void *reader(void *arg) {
     int nb_cycles = N_SCRITTURE;
     int n_try = N_SCRITTORI * N_SCRITTURE; //numero di tentativi che può fare un lettore per leggere
     while( nb_cycles > 0 && n_try > 0) {
-        for(int i = 0; i < N_QUEUE_PRIORITY; i++){
+        int i ;
+        int randomValue = randomInt(0,100) ;
+        int policy ;
+        if(randomValue > 30) {
+            policy = 1 ;
+            i = 0 ;
+        }
+        else {
+            policy = 0 ;
+            i = N_QUEUE_PRIORITY ;
+        }
+        do {
             //Controllo se la coda non è vuota e se non lo è leggo il buffer
             if(emQueue_IsEmpty(queue, i) != em_True) {
                 printf("Reader[%d] is reading the buffer...\r\n", nb_reader);
                 Temp_t elem;
-                emQueueReturn_t retval = emQueue_Get(queue, &elem, N_QUEUE_PRIORITY);
+                emQueueReturn_t retval = emQueue_Get(queue, &elem, policy);
                 switch(retval) {
                     case em_QueueEmpty:
-                    printf("Reader[%d] could not read the buffer: buffer is empty !\r\n", nb_reader);
-                    break;
+                        printf("Reader[%d] could not read the buffer: buffer is empty !\r\n", nb_reader);
+                        break;
                     case em_True:
-                    printf("Reader[%d] read %d\r\n", nb_reader, elem.num);
-                    nb_cycles--;
-                    break;
+                        printf("Reader[%d] read %d\r\n", nb_reader, elem.num);
+                        nb_cycles--;
+                        break;
                     default:
-                    printf("Reader[%d]: error on emQueue_Get()\r\n", nb_reader);
-                    break;
+                        printf("Reader[%d]: error on emQueue_Get()\r\n", nb_reader);
+                        break;
                 }
                 break;
             }
-        }
+            i++ ;
+        } while(i < N_QUEUE_PRIORITY) ;
         n_try-- ;
         timing_wait(MIN_MS_PAUSA, MAX_MS_PAUSA);
     }
