@@ -34,5 +34,5 @@ void elemDel(ElemType_t *el) {
 
 //print element on file
 void elemWrite(const ElemType_t *el, FILE *f) {
-	fprintf(f, "The num %d has been inserted in %f for %f", el->num, el->time_in, el->timer);
+	fprintf(f, "The num %d has been inserted for %f", el->num, el->timer);
 }
