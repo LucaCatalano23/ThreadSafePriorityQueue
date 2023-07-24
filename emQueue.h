@@ -10,7 +10,6 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <time.h>
 
 /*
  * Include porting header file
@@ -41,7 +40,7 @@ typedef struct {
 struct dataLifespan {
 	int num;
 	double lifespan;
-	double time_in;
+	clock_t time_in;
 };
 
 typedef struct dataLifespan data;
@@ -57,6 +56,6 @@ emQueueReturn_t emQueue_Put(emQueueHandle_t queue, void *ptrElem);
 
 emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest, size_t n_priority);
 
-emQueueReturn_t emQueue_Delete(emQueueHandle_t queue);
+emQueueReturn_t emQueue_Delete(emQueueHandle_t queue, size_t n_priority);
 
 #endif /* EMQUEUE_H_ */

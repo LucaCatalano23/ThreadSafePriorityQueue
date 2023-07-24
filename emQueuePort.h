@@ -45,6 +45,13 @@ typedef void * Queue_sem_t;
 #define emQueuePort_StructIsEmpty(ptrStruct)							emCircularIsEmpty(ptrStruct)
 #define emQueuePort_StructGetHead(ptrStruct)							emCircularGetHead(ptrStruct)
 #define emQueuePort_StructGetTail(ptrStruct)							emCircularGetTail(ptrStruct)
+#define emQueuePort_Stampa(ptrStruct)                                   stampaCoda(ptrStruct)
+/*
+ * Necessary definition to use the policy lifespan
+ */
+
+#include "emManager.h"
+#define emQueuePort_Manage(Struct)							manage(Struct)
 
 /*
  * Necessary definition to handle the specific data type of the structure

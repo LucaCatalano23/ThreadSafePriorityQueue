@@ -9,6 +9,7 @@
 double step = (double) MAX_LIFESPAN / N_QUEUE_PRIORITY;
 
 emQueueHandle_t emQueue_New(const size_t queueSize, const size_t elemSize, const char *name, const size_t n_priority) {
+	
 	if( (queueSize < 2) || (elemSize < 1) ) return NULL;
 	emQueueHandle_t retval = emQueuePort_Malloc(sizeof(Handler_t));
 	if(retval != NULL) {
@@ -23,6 +24,7 @@ emQueueHandle_t emQueue_New(const size_t queueSize, const size_t elemSize, const
 }
 
 emQueueReturn_t emQueue_IsFull(emQueueHandle_t queue, size_t priority) {
+	
 	emQueueReturn_t retval = emQueuePort_EnterCritical(queue->semHandle);
 	if(retval != 1) {
 		return em_SemError;
@@ -36,6 +38,7 @@ emQueueReturn_t emQueue_IsFull(emQueueHandle_t queue, size_t priority) {
 }
 
 emQueueReturn_t emQueue_IsEmpty(emQueueHandle_t queue, size_t priority) {
+	
 	emQueueReturn_t retval = emQueuePort_EnterCritical(queue->semHandle);
 	if(retval != 1) {
 		return em_SemError;
@@ -49,6 +52,7 @@ emQueueReturn_t emQueue_IsEmpty(emQueueHandle_t queue, size_t priority) {
 }
 
 emQueueReturn_t emQueue_Put(emQueueHandle_t queue, void *ptr) {
+	
 	data* ptrElem = (data*) ptr;
 	if(queue == NULL) return emError;
 	size_t priority = (size_t) (ptrElem->lifespan / step) ;
@@ -60,18 +64,27 @@ emQueueReturn_t emQueue_Put(emQueueHandle_t queue, void *ptr) {
 			void * dest = emQueuePort_StructGetHead(queue->dataStruct[priority]) ; 
 			emQueuePort_ElemCpy(ptrElem, dest, queue->elemSize) ;
 			retVal = em_True;
+			/*STAMPA LE CODE; da usare in caso di debug*/
+			/*
+		    for(int i = 0; i < N_QUEUE_PRIORITY; ++i) {
+				emQueuePort_Stampa(queue->dataStruct[i]) ;
+			}
+			*/
 		}
 	} else {
 		return em_SemError;
-	}
+	}	
+	emQueuePort_Manage(queue) ;
 	emQueuePort_ExitCritical(queue->semHandle);
 	return (emQueueReturn_t)retVal;
 }
 
 emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest, size_t n_priority) {
+	
 	if(queue == NULL) return emError;
 	emQueueReturn_t retVal = emQueuePort_EnterCritical(queue->semHandle);
 	if(retVal == 1) {
+		emQueuePort_Manage(queue) ;
 		for(size_t i = 0; i < n_priority; i++) {
 			if(emQueuePort_StructIsEmpty(queue->dataStruct[i])) {
 				retVal = em_QueueEmpty;
@@ -79,6 +92,12 @@ emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest, size_t n_prior
 				void * src = emQueuePort_StructGetTail(queue->dataStruct[i]);
 				emQueuePort_ElemCpy(src, ptrDest, queue->elemSize);
 				retVal = em_True;
+				/*STAMPA LE CODE; da usare in caso di debug*/
+			    /*
+				for(int i = 0; i < N_QUEUE_PRIORITY; ++i) {
+					emQueuePort_Stampa(queue->dataStruct[i]) ;
+				}
+				*/
 				break;
 			}
 		}
@@ -89,14 +108,15 @@ emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest, size_t n_prior
 	return (emQueueReturn_t)retVal;
 }
 
-emQueueReturn_t emQueue_Delete(emQueueHandle_t queue) {
+emQueueReturn_t emQueue_Delete(emQueueHandle_t queue, size_t n_priority) {
+	
 	if(queue == NULL) return em_True;
 	/* Save the reference to the semaphore */
 	void *sem = queue->semHandle;
 	int retVal = emQueuePort_EnterCritical(sem);
 
-	for(size_t i = 0; i < sizeof(queue->dataStruct)/sizeof(queue->dataStruct[0]); ++i) {
-		emQueueport_DeleteStruct(queue->dataStruct + i);
+	for(size_t i = 0; i < n_priority; ++i) {
+		emQueueport_DeleteStruct(queue->dataStruct[i]);
 	}
 
 	emQueuePort_Free(queue);
