@@ -19,7 +19,7 @@
 typedef struct {
     int num;
     double lifespan;
-    double time_in;
+    clock_t time_in;
 } Temp_t;
 
 void shuffle(void *array[], size_t n) {
@@ -89,7 +89,8 @@ void *writer(void *arg) {
 void *reader(void *arg) {
     int nb_reader = *(int*)arg;
     int nb_cycles = N_SCRITTURE;
-    while( nb_cycles > 0) {
+    int n_try = N_SCRITTORI * N_SCRITTURE; //numero di tentativi che può fare un lettore per leggere
+    while( nb_cycles > 0 && n_try > 0) {
         for(int i = 0; i < N_QUEUE_PRIORITY; i++){
             //Controllo se la coda non è vuota e se non lo è leggo il buffer
             if(emQueue_IsEmpty(queue, i) != em_True) {
@@ -101,7 +102,7 @@ void *reader(void *arg) {
                     printf("Reader[%d] could not read the buffer: buffer is empty !\r\n", nb_reader);
                     break;
                     case em_True:
-                    printf("Reader[%d] read %d from queue %d...%f\r\n", nb_reader, elem.num, i, elem.time_in);
+                    printf("Reader[%d] read %d\r\n", nb_reader, elem.num);
                     nb_cycles--;
                     break;
                     default:
@@ -111,6 +112,7 @@ void *reader(void *arg) {
                 break;
             }
         }
+        n_try-- ;
         timing_wait(MIN_MS_PAUSA, MAX_MS_PAUSA);
     }
     return NULL;
