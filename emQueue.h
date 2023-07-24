@@ -1,8 +1,6 @@
 /*
  * emQueue.h
  *
- *  Created on: 17 giu 2023
- *      Author: vitomannone
  */
 
 #ifndef EMQUEUE_H_
@@ -52,9 +50,9 @@ emQueueReturn_t emQueue_IsFull(emQueueHandle_t queue, size_t priority);
 
 emQueueReturn_t emQueue_IsEmpty(emQueueHandle_t queue, size_t priority);
 
-emQueueReturn_t emQueue_Put(emQueueHandle_t queue, void *ptrElem);
+emQueueReturn_t emQueue_Put(emQueueHandle_t queue, void *ptrElem, int policy);
 
-emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest, size_t n_priority);
+emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest, int policy);
 
 emQueueReturn_t emQueue_Delete(emQueueHandle_t queue, size_t n_priority);
 
