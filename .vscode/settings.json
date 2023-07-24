@@ -1,7 +1,8 @@
 {
   "files.associations": {
     "presentazioneesame.h": "c",
-    "emqueue.h": "c"
+    "emqueue.h": "c",
+    "emmanager.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
@@ -58,5 +59,6 @@
   "C_Cpp_Runner.useUndefinedSanitizer": false,
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
-  "C_Cpp_Runner.useLinkTimeOptimization": false
+  "C_Cpp_Runner.useLinkTimeOptimization": false,
+  "C_Cpp.errorSquiggles": "disabled"
 }
