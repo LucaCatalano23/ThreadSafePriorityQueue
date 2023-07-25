@@ -2,7 +2,7 @@
  * ElemType.h
  *
  *  Created on: 18 giu 2023
- *      Author: vitomannone
+ *      Author: vitomannone, Luca Catalano, Luca Eugenio Catalano
  */
 
 #ifndef ELEMTYPE_H_

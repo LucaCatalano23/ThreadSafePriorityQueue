@@ -2,7 +2,7 @@
  * ElemType.c
  *
  *  Created on: 18 giu 2023
- *      Author: vitomannone
+ *      Author: vitomannone, Luca Catalano, Luca Eugenio Corrado
  */
 #include "ElemType.h"
 

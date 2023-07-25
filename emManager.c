@@ -2,7 +2,7 @@
  *  emManager.c
  *
  *  Created on: 18 lug 2023
- *      Authors: Lucacatalano23, ChorlukaBA
+ *      Authors: Luca Catalano, Luca Eugenio Catalano
  */
 
 #include "emManager.h"
@@ -51,30 +51,14 @@ void aging(QueueHandle_t queues, CBuffer_t *queue, int currentPriority, double s
     //if the priority is change
     if (priority < currentPriority) {
         value* elem = (value *) source ;
-        printf("%d DALLA PRIORITA' %d ALLA PRIORITA' %ld\n", elem->num, currentPriority, priority) ;
-        uint8_t temp = *source;
-        uint8_t* p = source;
+        printf("%d DALLA CODA A PRIORITA' %d ALLA CODA A PRIORITA' %ld\n", elem->num, currentPriority, priority) ;
         /*
           Effettuo uno shift a destra dell'elemento un numero pari di volte 
           tale da fare raggiungere l'elemento in coda all'array circolare
         */
         for(int z = 1; z <= (elemInd-queue->tailInd)%queue->maxElems; z++) {
             uint8_t* destination = (uint8_t*)queue->startBuffer + (((elemInd-z)%queue->maxElems) * queue->elemSize);
-            if(elemInd < queue->tailInd) {
-                if((elemInd-z) >= 0) {
-                    *p = *(p - queue->elemSize) ;
-                }
-                else if((elemInd-z) < 0) {
-                    *p = *(p + ((elemInd-z)%queue->maxElems) * queue->elemSize) ;
-                    if(((elemInd-z)%queue->maxElems) >  queue->tailInd){
-                        *p = *(p - queue->elemSize) ;
-                    }
-                }
-            }
-            else if(elemInd > queue->tailInd) {
-                *p = *(p-queue->elemSize) ;
-            }
-            *destination = temp;
+            emManagerPort_Swap(source, destination) ;
         }
         emManagerPort_ExitCritical(queue->sem);
         //Estraggo il valore dalla coda per metterlo in testa all'array con priorità corretta
@@ -89,32 +73,16 @@ void aging(QueueHandle_t queues, CBuffer_t *queue, int currentPriority, double s
 }
 
 void deleteElement(QueueHandle_t queues, CBuffer_t *queue, int currentPriority, int elemInd, uint8_t *source) {
-    uint8_t temp = *source;
-    uint8_t* p = source;
     /*
       Effettuo uno shift a destra dell'elemento un numero pari di volte 
       tale da fare raggiungere l'elemento in coda all'array circolare
     */
     for(int z = 1; z <= (elemInd-queue->tailInd)%queue->maxElems; z++) {             
         uint8_t* destination = (uint8_t*)queue->startBuffer + (((elemInd-z)%queue->maxElems) * queue->elemSize);
-        if(elemInd < queue->tailInd) {
-            if((elemInd-z) >= 0) {
-                *p = *(p - queue->elemSize) ;
-            }
-            else if((elemInd-z) < 0) {
-                *p = *(p + ((elemInd-z)%queue->maxElems) * queue->elemSize) ;
-                if(((elemInd-z)%queue->maxElems) >  queue->tailInd){
-                    *p = *(p - queue->elemSize) ;
-                }
-            }
-        }
-        else if(elemInd > queue->tailInd) {
-            *p = *(p-queue->elemSize) ;
-        }
-        *destination = temp;
+        emManagerPort_Swap(source, destination) ;
     }
     emManagerPort_ExitCritical(queue->sem);
-    //Estraggo l'elemeno dalla coda dell'array
+    //Estraggo l'elemento dalla coda dell'array
     emManagerPort_StructGetTail(queues->dataStruct[currentPriority]);  
     int sem_retval = emManagerPort_EnterCritical(queue->sem);
     if(sem_retval != 1) {

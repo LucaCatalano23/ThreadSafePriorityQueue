@@ -2,7 +2,7 @@
  * emCircularPort.h
  *
  *  Created on: 21 giu 2023
- *      Author: vitomannone
+ *      Author: vitomannone, Luca Catalano, Luca Eugenio Catalano
  */
 
 #ifndef EMCIRCULARPORT_H_

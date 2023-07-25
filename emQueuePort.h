@@ -2,7 +2,7 @@
  * emQueuePort.h
  *
  *  Created on: 23 giu 2023
- *      Author: vitomannone
+ *      Author: vitomannone, Luca Catalano, Luca Eugenio Corrado
  */
 
 #ifndef EMQUEUEPORT_H_

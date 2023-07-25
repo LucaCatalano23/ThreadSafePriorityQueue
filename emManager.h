@@ -2,7 +2,7 @@
  * emManager.h
  *
  *  Created on: 18 lug 2023
- *      Authors: Lucacatalano23, ChorlukaBA
+ *      Authors: Luca Catalano, Luca Eugenio Corrado
  */
 
 #ifndef EMMANAGER_H_

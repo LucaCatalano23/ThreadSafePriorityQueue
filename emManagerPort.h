@@ -1,8 +1,8 @@
 /*
  * emManagerPort.h
  *
- *  Created on: //// 2023
- *      Author: ////
+ *  Created on: /18 lugl 2023
+ *      Author: Luca Catalano, Luca Eugenio Corrado
  */
 
 #ifndef EMMANAGERPORT_H_
@@ -27,6 +27,7 @@ typedef void * CB_sem_t;
 #include "emQueue.h"
 
 #define emManagerPort_ElemCpy(ptrSrc, ptrDest, size) 				    elemCopy(ptrSrc, ptrDest)
+#define emManagerPort_Swap(src, dest)                                   elemSwap(src, dest)
 
 #define emManagerPort_StructGetHead(ptrStruct)							emCircularGetHead(ptrStruct)
 #define emManagerPort_StructGetTail(ptrStruct)							emCircularGetTail(ptrStruct)

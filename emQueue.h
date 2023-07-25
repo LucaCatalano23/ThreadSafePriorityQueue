@@ -1,6 +1,7 @@
 /*
  * emQueue.h
  *
+ * Author: vitomannone, Luca Catalano, Luca Eugenio Corrado
  */
 
 #ifndef EMQUEUE_H_
@@ -54,6 +55,6 @@ emQueueReturn_t emQueue_Put(emQueueHandle_t queue, void *ptrElem, int policy);
 
 emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest, int policy);
 
-emQueueReturn_t emQueue_Delete(emQueueHandle_t queue, size_t n_priority);
+emQueueReturn_t emQueue_Delete(emQueueHandle_t queue);
 
 #endif /* EMQUEUE_H_ */

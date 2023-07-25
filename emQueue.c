@@ -1,6 +1,7 @@
 /*
  * emQueue.c
  *
+ * Author: vitomannone, Luca Catalano, Luca Eugenio Corrado
  */
 #include "emQueue.h"
 
@@ -138,14 +139,14 @@ emQueueReturn_t emQueue_Get(emQueueHandle_t queue, void *ptrDest, int policy) {
 	return (emQueueReturn_t)retVal;
 }
 
-emQueueReturn_t emQueue_Delete(emQueueHandle_t queue, size_t n_priority) {
+emQueueReturn_t emQueue_Delete(emQueueHandle_t queue) {
 	
 	if(queue == NULL) return em_True;
 	/* Save the reference to the semaphore */
 	void *sem = queue->semHandle;
 	int retVal = emQueuePort_EnterCritical(sem);
 
-	for(size_t i = 0; i < n_priority; ++i) {
+	for(size_t i = 0; i <= N_QUEUE_PRIORITY; ++i) {
 		emQueueport_DeleteStruct(queue->dataStruct[i]);
 	}
 
